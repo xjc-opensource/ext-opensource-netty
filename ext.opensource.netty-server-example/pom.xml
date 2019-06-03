@@ -1,0 +1,204 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>ext.opensource</groupId>
+		<artifactId>netty</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>netty-server-example</artifactId>
+
+	<properties>
+		<ignite.version>2.7.0</ignite.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>ext.opensource</groupId>
+			<artifactId>netty-server</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>ext.opensource</groupId>
+			<artifactId>ext.opensource.redis</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.ignite</groupId>
+			<artifactId>ignite-core</artifactId>
+			<version>${ignite.version}</version>
+		</dependency>
+
+		<!-- <dependency> <groupId>org.apache.ignite</groupId> <artifactId>ignite-spring</artifactId> 
+			<version>${ignite.version}</version> </dependency> -->
+
+		<dependency>
+			<groupId>org.apache.ignite</groupId>
+			<artifactId>ignite-slf4j</artifactId>
+			<version>${ignite.version}</version>
+		</dependency>
+
+
+
+		<dependency>
+			<groupId>org.thymeleaf</groupId>
+			<artifactId>thymeleaf</artifactId>
+			<version>3.0.11.RELEASE</version>
+		</dependency>
+		
+		<dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+         <!--    <version>1.1.1.RELEASE</version> -->
+        </dependency>
+
+	</dependencies>
+
+	<!-- Package as an executable jar -->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<dependencies>
+					<!-- <dependency> <groupId>org.springframework</groupId> <artifactId>springloaded</artifactId> 
+						<version>${springloaded.version}</version> </dependency> -->
+				</dependencies>
+
+				<configuration>
+					<layout>ZIP</layout>
+
+					<excludeGroupIds>
+						antlr , aopalliance , ch.qos.logback , com.alibaba
+						, com.fasterxml
+						,
+						com.fasterxml.jackson.core
+						,
+						com.fasterxml.jackson.dataformat,
+						com.fasterxml.jackson.module ,
+						com.github.jsqlparser , com.github.xiaoymin,
+						com.github.pagehelper
+						, com.google.code.gson
+						, com.google.guava ,
+						com.google.inject ,
+						com.google.inject.extensions , com.google.zxing
+						,
+						com.google.protobuf , commons-beanutils , commons-codec ,
+						commons-collections
+						, commons-configuration , commons-jxpath ,
+						commons-lang ,
+						commons-logging
+						, com.netflix.archaius ,
+						com.netflix.eureka ,
+						com.netflix.governator , com.netflix.hystrix
+						,
+						com.netflix.netflix-commons , com.netflix.ribbon ,
+						com.netflix.servo , com.sun.jersey
+						, com.sun.jersey.contribs ,
+						com.sun.mail , com.thoughtworks.xstream
+						, io.github.openfeign ,
+						io.netty
+						, io.reactivex , io.springfox , io.swagger ,
+						javax.activation ,
+						javax.inject , javax.persistence
+						, javax.servlet
+						, javax.validation , javax.ws.rs , javax.xml.stream
+						, joda-time ,
+						mysql , net.bytebuddy
+						, org.antlr , org.apache.commons ,
+						org.apache.httpcomponents ,
+						org.apache.tomcat ,
+						org.apache.tomcat.embed
+						, org.aspectj , org.bouncycastle ,
+						org.codehaus.jettison ,
+						org.codehaus.woodstox , org.hdrhistogram
+						,
+						org.hibernate , org.javassist , org.jboss.logging , org.jvnet ,
+						org.mapstruct , org.mybatis
+						, org.mybatis.spring.boot , org.ow2.asm
+						, org.reflections ,
+						org.slf4j , org.springframework ,
+						org.springframework.boot
+						, org.springframework.cloud ,
+						org.springframework.data ,
+						org.springframework.plugin ,
+						org.springframework.security
+						,org.springframework.retry
+						, org.yaml ,
+						redis.clients , stax ,
+						tk.mybatis , xmlpull , xpp3 ,
+						dom4j,
+						com.beust,
+						com.github.jai-imageio, xml-apis, net.coobird,
+						org.scala-lang,
+						org.apache.poi,org.apache.xmlbeans,com.github.virtuald,
+						org.projectlombok,
+						com.google.code.findbugs,com.google.j2objc,org.jsoup,net.sf.json-lib,net.sf.ezmorph
+						,com.google.errorprone,org.codehaus.mojo,org.postgresql,
+						io.shardingjdbc,
+						org.codehaus.groovy,commons-io,com.github.axet,commons-cli
+						<!-- log -->
+						,com.cwbase,net.logstash.logback,com.github.danielwegener,org.apache.kafka,net.jpountz.lz4,org.xerial.snappy
+						
+						<!-- report -->
+						,net.sf.barcode4j,org.apache.xmlgraphics,net.sf.jasperreports,org.apache.lucene,
+						org.jfree,jakarta-regexp,com.itextpdf,com.ibm.icu,org.jetbrains,org.codehaus.castor,
+						commons-digester,com.jhlabs,org.eclipse.jdt.core.compiler,com.github.axet,org.olap4j,
+						xalan,org.apache.ant,avalon-framework,
+						com.lowagie,org.apache.ignite,ignite-shmem,javax.cache,org.gridgain,org.attoparser
+						
+						<!-- other -->
+						,org.thymeleaf,xerces,org.unbescape,net.sourceforge.nekohtml,nz.net.ultraq.thymeleaf,ognl
+					</excludeGroupIds>
+
+				</configuration>
+
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+
+						<configuration>
+							<excludeGroupIds>
+								ext.opensource
+							</excludeGroupIds>
+							<outputDirectory>${project.build.directory}/lib</outputDirectory>
+							<overWriteReleases>true</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+							<overWriteIfNewer>true</overWriteIfNewer>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>	
+		</plugins>
+	</build>
+</project>

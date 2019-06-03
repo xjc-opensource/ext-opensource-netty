@@ -1,0 +1,18 @@
+
+
+  ___   ____   ___  ____   _____  ___   __ __  ____      __    ___ 
+ /   \ |    \ /  _]|    \ / ___/ /   \ |  |  ||    \    /  ]  /  _]
+|     ||  o  )  [_ |  _  (   \_ |     ||  |  ||  D  )  /  /  /  [_ 
+|  O  ||   _/    _]|  |  |\__  ||  O  ||  |  ||    /  /  /  |    _]
+|     ||  | |   [_ |  |  |/  \ ||     ||  :  ||    \ /   \_ |   [_ 
+|     ||  | |     ||  |  |\    ||     ||     ||  .  \\     ||     |
+ \___/ |__| |_____||__|__| \___| \___/  \__,_||__|\_| \____||_____|
+                                                                   
+        
+ :: netty client example :: 
+ 
+ Build Version: ${info.app.build.ver}
+ Application Version: ${application.version}${application.formatted-version}
+ Spring Boot Version: ${spring-boot.version}${spring-boot.formatted-version}
+ Spring Profiles Active: ${spring.profiles.active}
+
