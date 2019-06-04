@@ -39,7 +39,8 @@ public class MqttServerHandler extends SimpleChannelInboundHandler<MqttMessage> 
 			protocolProcess.processConnect(ctx.channel(), (MqttConnectMessage) msg);
 		} else {
 			if (!NettyUtil.isLogin(ctx.channel())) {
-				NettyLog.debug("error not login");
+				NettyLog.info("not login");
+				return ;
 			}
 		}
 

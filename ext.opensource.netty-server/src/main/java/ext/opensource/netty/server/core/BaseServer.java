@@ -1,12 +1,16 @@
 package ext.opensource.netty.server.core;
 
+import javax.net.ssl.SSLEngine;
+
 import ext.opensource.netty.common.ChannelManager;
 import ext.opensource.netty.common.ChannelManagerHandler;
 import ext.opensource.netty.common.HeartbeatServerHandler;
+import ext.opensource.netty.common.NettyConstant;
 import ext.opensource.netty.common.NettyLog;
 import ext.opensource.netty.common.SocketModel;
 import ext.opensource.netty.common.api.BaseChannel;
 import ext.opensource.netty.common.exception.SocketRuntimeException;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -20,10 +24,9 @@ import io.netty.channel.oio.OioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.oio.OioServerSocketChannel;
-import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 
 /**
@@ -37,12 +40,9 @@ public abstract class BaseServer extends BaseChannel {
 	private EventLoopGroup bossGroup;
 	private EventLoopGroup workerGroup;
 	private ServerBootstrap serverBootstrap;
-	private SslContext sslCtx = null;
-
-	@Setter
-	@Getter
-	@NonNull
-	private SocketModel socketModel = SocketModel.UNBOLOCK;
+	
+	@Setter @Getter
+	private boolean sslClientAuth=false;
 
 	@Getter
 	private ChannelManager clientManager = new ChannelManager();
@@ -103,7 +103,7 @@ public abstract class BaseServer extends BaseChannel {
 		try {
 			serverBootstrap.option(ChannelOption.SO_KEEPALIVE, keepAlive);
 			serverBootstrap.option(ChannelOption.TCP_NODELAY, tcpNoDelay);
-			serverBootstrap.option(ChannelOption.SO_BACKLOG, 128);
+			serverBootstrap.option(ChannelOption.SO_BACKLOG, soBacklog);
 			serverBootstrap.group(bossGroup, workerGroup);
 			if (SocketModel.BLOCK.equals(socketModel)) {
 				serverBootstrap.channel(OioServerSocketChannel.class);
@@ -114,13 +114,16 @@ public abstract class BaseServer extends BaseChannel {
 				@Override
 				protected void initChannel(SocketChannel ch) throws Exception {
 					if (sslCtx != null) {
-						ch.pipeline().addLast(sslCtx.newHandler(ch.alloc()));
+				        SSLEngine sslEngine = sslCtx.newEngine(ch.alloc());
+				        sslEngine.setUseClientMode(false);
+				        sslEngine.setNeedClientAuth(sslClientAuth);
+				        ch.pipeline().addFirst(NettyConstant.HANDLER_NAME_SSL, new SslHandler(sslEngine));  
 					}
 					if (self().isCheckHeartbeat()) {
 						NettyLog.info("checkHeartBeat.....");
 						ch.pipeline().addLast(
 								new IdleStateHandler(readerIdleTimeSeconds, writerIdleTimeSeconds, allIdleTimeSeconds));
-						ch.pipeline().addLast(new HeartbeatServerHandler());
+						ch.pipeline().addLast(NettyConstant.HANDLER_NAME_HEARTCHECK, new HeartbeatServerHandler());
 					}
 
 					ch.pipeline().addLast(new ChannelManagerHandler(self().getClientManager()));

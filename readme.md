@@ -45,6 +45,12 @@ ext-opensource-netty
   * 心跳
   * 重连
   
+# Todo List
+  * MQTT监控
+  * MQTT管理
+  * 订阅通配符支持
+  * MQTT WebSocket支持
+
 
 # 参考资料
   * Netty实战 (诺曼-毛瑞尔)

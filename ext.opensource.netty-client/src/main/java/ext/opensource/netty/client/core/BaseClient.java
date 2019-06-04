@@ -4,14 +4,19 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.SSLEngine;
+
 import ext.opensource.netty.client.mqtt.common.ClientEvent;
 import ext.opensource.netty.common.HeartbeatClientHandler;
+import ext.opensource.netty.common.NettyConstant;
 import ext.opensource.netty.common.NettyLog;
 import ext.opensource.netty.common.NettyUtil;
 import ext.opensource.netty.common.SocketModel;
 import ext.opensource.netty.common.api.BaseChannel;
 import ext.opensource.netty.common.exception.LoginException;
 import ext.opensource.netty.common.exception.SocketRuntimeException;
+
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -23,9 +28,9 @@ import io.netty.channel.oio.OioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.channel.socket.oio.OioSocketChannel;
+import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 
 /**
@@ -39,9 +44,6 @@ public abstract class BaseClient extends BaseChannel implements ClientProcess {
 	private Semaphore semConnect = new Semaphore(0);
 	private Bootstrap bootstrap;
 	private EventLoopGroup group;
-
-	@Setter @Getter @NonNull
-	private SocketModel socketModel = SocketModel.UNBOLOCK;
 
 	private ScheduledExecutorService reConnectService;
 
@@ -104,14 +106,19 @@ public abstract class BaseClient extends BaseChannel implements ClientProcess {
 		bootstrap.handler(new ChannelInitializer<SocketChannel>() {
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
-
 				initSocketChannel(ch);
+				
+				if (sslCtx != null) {
+			        SSLEngine sslEngine = sslCtx.newEngine(ch.alloc());
+			        sslEngine.setUseClientMode(true);
+			        ch.pipeline().addFirst(NettyConstant.HANDLER_NAME_SSL, new SslHandler(sslEngine));  
+				}
 
 				if (self().isCheckHeartbeat()) {
 					NettyLog.info("checkHeartBeat.....");
 					ch.pipeline().addLast(
 							new IdleStateHandler(readerIdleTimeSeconds, writerIdleTimeSeconds, allIdleTimeSeconds));
-					ch.pipeline().addLast(new HeartbeatClientHandler());
+					ch.pipeline().addLast(NettyConstant.HANDLER_NAME_HEARTCHECK, new HeartbeatClientHandler());
 				}
 			}
 		});

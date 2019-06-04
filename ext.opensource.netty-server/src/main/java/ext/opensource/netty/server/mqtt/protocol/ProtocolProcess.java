@@ -152,7 +152,7 @@ public class ProtocolProcess implements InternalRecvice {
 		}
 		
 		if (idelTimes> 0) {
-			String idelStr = "idle";
+			String idelStr = NettyConstant.HANDLER_NAME_HEARTCHECK;
 			if (channel.pipeline().names().contains(idelStr)) {
 				channel.pipeline().remove(idelStr);
 			}

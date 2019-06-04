@@ -22,6 +22,11 @@ public class MqttServer extends BaseServer {
 	private ProtocolProcess protocolProcess;
 	
 	public MqttServer() {
+		checkHeartbeat = true;
+		readerIdleTimeSeconds = 0;
+		writerIdleTimeSeconds = 0; 
+		allIdleTimeSeconds = 60;
+		
 		protocolProcess = new ProtocolProcess();
 		cfg = new ProtocolProcessConfig(protocolProcess);
 		protocolProcess.init(cfg);

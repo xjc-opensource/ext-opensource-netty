@@ -33,6 +33,10 @@ public class MqttClientApplication implements CommandLineRunner, SocketApplicati
 	public void run(String... strings) throws URISyntaxException {
 		String clientId = "JavaClient";
 		nettyClient = new MqttClient();
+		
+		///ssl
+		//nettyClient.setSslCtx(SslContextUtil.createSSLClientContextForJKS("cert/ssl_client.jks", "client"));
+		
 		nettyClient.mqttOptions().setClientIdentifier(clientId);
 		initCustom(nettyClient);
 		
@@ -45,11 +49,11 @@ public class MqttClientApplication implements CommandLineRunner, SocketApplicati
 			}
 		});
 
-		nettyClient.setCharsetName("GB2312");
-		nettyClient.setCheckConnectFlag(true);
-		nettyClient.connect("192.168.136.148", 1883);
+		///nettyClient.setCharsetName("GB2312");
+		///nettyClient.setCheckConnectFlag(true);
+		///nettyClient.connect("192.168.136.148", 1883);
 		///
-		// nettyClient.connect(8989);
+		 nettyClient.connect(8989);
 		// nettyClient.requireSync();
 		System.err.println("mqtt client run end");
 	}

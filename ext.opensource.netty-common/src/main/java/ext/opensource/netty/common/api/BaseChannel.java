@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
 import java.util.concurrent.Semaphore;
+
+import ext.opensource.netty.common.SocketModel;
+
 import io.netty.channel.Channel;
+import io.netty.handler.ssl.SslContext;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -26,6 +30,7 @@ public abstract class BaseChannel {
 	 */
 	@Getter @Setter
 	private String host;
+	
 	/**
 	 * 端口号
 	 */
@@ -37,16 +42,24 @@ public abstract class BaseChannel {
      */
 	@Getter @Setter
     protected int workerCount;
+	
     /**
      * 是否启用keepAlive
      */
 	@Getter @Setter
     protected boolean keepAlive = false;
+	
     /**
      * 是否启用tcpNoDelay
      */
 	@Getter @Setter
     protected boolean tcpNoDelay = false;
+	
+	/**
+	 * Sokcet参数, 存放已完成三次握手请求的队列最大长度, 默认511长度
+	 */
+	@Setter @Getter
+	protected int soBacklog = 1024;
     
     
     /**
@@ -54,16 +67,19 @@ public abstract class BaseChannel {
      */
 	@Getter @Setter
     protected boolean checkHeartbeat = false;
+	
     /**
      * 心跳检查时的读空闲时间
      */
 	@Getter @Setter
     protected int readerIdleTimeSeconds = 0;
+	
     /**
      * 心跳检查时的写空闲时间
      */
 	@Getter @Setter
     protected int writerIdleTimeSeconds = 0;
+	
     /**
      * 心跳检查时的读写空闲时间
      */
@@ -75,12 +91,28 @@ public abstract class BaseChannel {
      */
 	@Getter @Setter
 	@NonNull
-	private String charsetName = "utf-8";
+	protected String charsetName = "utf-8";
+	
+	
+	/**
+	 * ssl
+	 */
+	@Setter @Getter
+	protected SslContext sslCtx = null;
+
+	
+	/**
+	 * socketModel
+	 */
+	@Setter @Getter
+	@NonNull
+	protected SocketModel socketModel = SocketModel.UNBOLOCK;
+	
     
     protected List<EventListener> eventListeners = new ArrayList<>();
     
 	public BaseChannel() {
-		 // 默认工作线程数
+	   // 默认工作线程数
        this.workerCount = Runtime.getRuntime().availableProcessors() * 2;
        //添加JVM关闭时的勾子
        Runtime.getRuntime().addShutdownHook(new ShutdownHook(this));
