@@ -29,7 +29,7 @@ public class WebSocketEventChat extends BaseWebSocketEvent {
 
 	@Override
 	public void onOpenEvent(BaseServer sevice, WebSocketSession session, Map<String, Object> parameter) {
-		System.err.println("parameter:" + parameter);
+		System.err.println("onOpenEvent parameter:" + parameter);
 		sevice.broadcastMessageString("weclome " + session.channel().id().asShortText());
 	}
 

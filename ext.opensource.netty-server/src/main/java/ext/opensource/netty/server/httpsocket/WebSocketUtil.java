@@ -25,11 +25,15 @@ public class WebSocketUtil {
 	}
 	
 	public static String getWebSocketLocation(ChannelPipeline cp, HttpRequest req, String path) {
+		return getWebSocketLocation(cp.get(SslHandler.class) != null, req, path);
+	}
+	
+	public static String getWebSocketLocation(boolean bSSL, HttpRequest req, String path) {
 		String protocol = "ws";
-		if (cp.get(SslHandler.class) != null) {
-			// SSL in use so use Secure WebSockets
+		if (bSSL) {
 			protocol = "wss";
 		}
 		return protocol + "://" + req.headers().get(HttpHeaderNames.HOST) + path;
 	}
 }
+

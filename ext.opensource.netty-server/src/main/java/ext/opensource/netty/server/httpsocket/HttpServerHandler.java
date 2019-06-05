@@ -3,10 +3,7 @@ package ext.opensource.netty.server.httpsocket;
 import static ext.opensource.netty.common.NettyConstant.WEBSOCKET_KEY;
 import static io.netty.handler.codec.http.HttpHeaderNames.CONNECTION;
 import static io.netty.handler.codec.http.HttpHeaderValues.CLOSE;
-
-import java.util.HashMap;
 import java.util.Map;
-
 import ext.opensource.netty.server.core.BaseServer;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -126,9 +123,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
 		}  else {
 			if (httpResource != null) {
 				String resFileName = path;
-				HashMap<String, Object> map = new HashMap<String, Object>(16);
-				map.put("socketurl", WebSocketUtil.getWebSocketLocation(ctx.pipeline(), req, websocketPath));
-				ByteBuf res = httpResource.buildWebSocketRes(resFileName, map);
+				ByteBuf res = httpResource.buildWebSocketRes(req, resFileName);
 				if (null == res) {
 					sendHttpResponse(ctx, req,
 							new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_FOUND));

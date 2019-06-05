@@ -1,10 +1,13 @@
 package ext.opensource.netty.server.example.http;
 
 import java.util.Map;
+
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+
 import ext.opensource.netty.server.httpsocket.HttpResourceFile;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.util.CharsetUtil;
@@ -35,6 +38,7 @@ public class HttpResourceThymeleaf extends HttpResourceFile {
 	@Override
 	protected ByteBuf buildRes(String resPath, Map<String, Object> parameters) {
 		if (!isThymeleafFile(resPath)) {
+			
 			return super.buildRes(resPath, parameters);
 		} else {
 			try {

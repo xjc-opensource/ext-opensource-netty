@@ -7,6 +7,7 @@ import ext.opensource.netty.server.mqtt.common.InternalMessage;
 import ext.opensource.netty.server.mqtt.protocol.ProtocolProcess;
 import ext.opensource.netty.server.mqtt.protocol.ProtocolProcessConfig;
 import ext.opensource.netty.server.mqtt.protocol.ProtocolUtil;
+
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.mqtt.MqttDecoder;
 import io.netty.handler.codec.mqtt.MqttEncoder;
@@ -18,6 +19,10 @@ import io.netty.handler.codec.mqtt.MqttEncoder;
  **/
 
 public class MqttServer extends BaseServer {
+	protected final String HANDLER_MQTTDECODER="mqttDecoder";
+	protected final String HANDLER_MQTTENCODER="mqttEncoder";
+	protected final String HANDLER_MQTTHANDER="mqttHander";
+	
 	private ProtocolProcessConfig cfg;
 	private ProtocolProcess protocolProcess;
 	
@@ -45,14 +50,16 @@ public class MqttServer extends BaseServer {
 		this.broadcastMessage(ProtocolUtil.publishMessage("/broadcast", msg.getBytes()));
 	}
  
+
+	
 	@Override
 	protected void initSocketChannel(SocketChannel ch) {
 		super.initSocketChannel(ch);
-		ch.pipeline().addLast("mqttDecoder", new MqttDecoder());
-		ch.pipeline().addLast("mqttEncoder", MqttEncoder.INSTANCE);
-		ch.pipeline().addLast("mqttHander", new MqttServerHandler(protocolProcess));
+		ch.pipeline().addLast(HANDLER_MQTTDECODER, new MqttDecoder());
+		ch.pipeline().addLast(HANDLER_MQTTENCODER, MqttEncoder.INSTANCE);
+		ch.pipeline().addLast(HANDLER_MQTTHANDER, new MqttServerHandler(protocolProcess));	
 	}
-	
+
 	public void testInternalMessage() {	
 		InternalMessage msg =
 				InternalMessage.builder().topicName("testInternalMessage").build(); 

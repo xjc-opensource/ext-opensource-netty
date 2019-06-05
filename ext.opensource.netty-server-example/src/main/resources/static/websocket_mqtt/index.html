@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="UTF-8">
+   <title>MQTT WebSocket Client</title>
+</head>
+
+<style>
+   .log {
+      width: 500px;
+      height: 300px;
+      border: 1px solid #CCC;
+      padding: 5px;
+      margin: 5px 0px;
+      overflow-y : auto;
+      display: block;
+      word-break: break-all;
+      word-wrap: break-word;
+      overflow-y: auto;
+      font-family:Simsun;
+   }
+   .msgServer{
+      color: blue;
+   }
+
+   .footer {position:absolute; bottom:10px;}
+</style>
+
+<script type='text/javascript' src='paho-mqtt.js'></script>
+
+<script type="text/javascript">
+   var client = null;
+
+   Date.prototype.format = function(format) {
+      var date = {
+         "M+" : this.getMonth() + 1,
+         "d+" : this.getDate(),
+         "h+" : this.getHours(),
+         "m+" : this.getMinutes(),
+         "s+" : this.getSeconds(),
+         "q+" : Math.floor((this.getMonth() + 3) / 3),
+         "S+" : this.getMilliseconds()
+      };
+      if (/(y+)/i.test(format)) {
+         format = format.replace(RegExp.$1, (this.getFullYear() + '')
+                 .substr(4 - RegExp.$1.length));
+      }
+      for ( var k in date) {
+         if (new RegExp("(" + k + ")").test(format)) {
+            format = format.replace(RegExp.$1,
+                    RegExp.$1.length == 1 ? date[k] : ("00" + date[k])
+                            .substr(("" + date[k]).length));
+         }
+      }
+      return format;
+   }
+
+   function getNowTime() {
+      return new Date().format('hh:mm:ss S: ');
+   }
+
+   function dispalyMesage(msg) {
+      var isServer = arguments[1] ? arguments[1] : false;
+      var ta = document.getElementById('log');
+      var cssName = "msgClient";
+      if (isServer) {
+         cssName = "msgServer"
+      };
+
+      ta.innerHTML =
+              "<div>" + getNowTime() + "<span class='"+cssName+"'> " + msg + "</span></div>" + ta.innerHTML;
+   }
+
+   function controlBtn() {
+      var isOpen = false;
+      if ((client != null && (client.isConnected()))) {
+         isOpen = true;
+      }
+
+      document.getElementById("btnOpen").disabled = isOpen;
+      document.getElementById("btnClose").disabled = !isOpen;
+      document.getElementById("btnSend").disabled = !isOpen;
+   }
+
+   function send() {
+      if ((client != null) && (client.isConnected())) {
+         var topic = document.getElementById('mqttTopic').value;
+         var message = document.getElementById('mqttMessage').value;
+         var qos = document.getElementById('mqttQos').value;
+         var retain =  Boolean(Number(document.getElementById('mqttRetain').value));
+
+         message = new Paho.MQTT.Message(message);
+         message.destinationName = topic;
+         message.qos = Number(qos);
+         message.retained = retain;
+
+         client.send(message);
+      } else {
+         alert("contact not start");
+      }
+   }
+   function Close() {
+      if ((client != null) && (client.isConnected())) {
+         client.disconnect();
+         controlBtn();
+      }
+   }
+
+   function clearMessage() {
+      document.getElementById('log').innerHTML = "";
+   }
+
+   function Open() {
+      controlBtn();
+      if (client != null && (client.isConnected())) {
+         Close();
+      }
+      if (window.WebSocket) {
+         var host = document.getElementById('host').value;
+         var port = document.getElementById('port').value;
+         var clientid = document.getElementById('clientid').value;
+         var bSSL = Boolean(Number(document.getElementById('mqttSSL').value));
+       //  bSSL =false;
+         client = new Paho.MQTT.Client(host, Number(port), clientid);
+         client.onConnectionLost = onConnectionLost;
+         client.onMessageArrived = onMessageArrived;
+         // connect the client
+         client.connect({onSuccess:onConnect, useSSL: bSSL});
+         dispalyMesage("connect init...");
+      } else {
+         alert("browse not support WebSocket！");
+      }
+   }
+
+
+   // called when the client connects
+   function onConnect() {
+      // Once a connection has been made, make a subscription and send a message.
+      dispalyMesage("onConnect - " + client.clientId );
+
+      client.subscribe("World");
+
+      message = new Paho.MQTT.Message("Hello");
+      message.destinationName = "World";
+      client.send(message);
+
+      controlBtn();
+   }
+
+   // called when the client loses its connection
+   function onConnectionLost(responseObject) {
+      if (responseObject.errorCode !== 0) {
+         dispalyMesage("onConnectionLost -"+responseObject.errorMessage);
+      }
+   }
+
+   // called when a message arrives
+   function onMessageArrived(message) {
+      dispalyMesage("onMessageArrived - "+ message.topic + ":" + message.payloadString);
+   }
+</script>
+
+<body>
+<div>
+   <form onsubmit="return false;">
+      <h3>MQTT WebSocket Client</h3>
+      <div>
+         host:<input type="text" id="host" name="host" style="width: 120px"
+                value="192.168.136.148" th:value="${host}" />
+         port:<input type="text" id="port" name="port" style="width: 40px"
+                value="9000" th:value="${port}" />
+
+         client: <input type="text" id="clientid" name="clientid" style="width: 120px"
+                value="webMqttClient" />
+
+         <input type="button"
+                id="btnOpen" value="open" onclick="Open();" />
+         <input type="button" id="btnClose" value="close" onclick="Close();">
+      </div>
+
+   <div>
+      ssl:
+      <select name="mqttSSL" id="mqttSSL">
+         <option value ="0">0</option>
+         <option value ="1">1</option>
+      </select>
+   </div>
+
+      <div id="log" class="log"></div>
+      <div>
+      topic:<input type="text" name="mqttTopic" id="mqttTopic" style="width: 120px"
+      value="World" />
+
+      msg:<input type="text" name="mqttMessage" id="mqttMessage" style="width: 200px"
+             value="mqtt web hello" />
+      </div>
+      <div>
+      qos:
+         <select name="mqttQos" id="mqttQos">
+            <option value ="0">0</option>
+            <option value ="1">1</option>
+            <option value="2">2</option>
+         </select>
+      retain:
+         <select name="mqttRetain" id="mqttRetain">
+            <option value ="0">false</option>
+            <option value ="1">true</option>
+         </select>
+      </div>
+      <input type="button" id="btnSend" value="publish" onclick="send();" />
+      <input type="button" onclick="clearMessage();" value="clear log" />
+   </form>
+</div>
+
+
+<script type="text/javascript">
+   Open();
+</script>
+
+<div class="footer">Ref: <a href="http://api.easylink.io/tools/mqtt/" target="_blank">HiveMQ Web Client</a></div>
+
+</body>
+</html>
+
+
+
+

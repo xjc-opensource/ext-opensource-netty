@@ -33,6 +33,13 @@ public class MqttServerHandler extends SimpleChannelInboundHandler<MqttMessage> 
 
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, MqttMessage msg) throws Exception {
+		
+		if (!msg.decoderResult().isSuccess()) {
+			NettyLog.error("error decoder");
+			ctx.close(); 
+			return;
+		}
+		
 		NettyLog.debug("read: " + msg.fixedHeader().messageType());
 		
 		if (msg.fixedHeader().messageType() == MqttMessageType.CONNECT) {
