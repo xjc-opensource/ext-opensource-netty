@@ -1,12 +1,11 @@
 package ext.opensource.netty.server.simple;
 
-import ext.opensource.netty.common.NettyConstant;
 import ext.opensource.netty.common.NettyLog;
 import ext.opensource.netty.common.TranDataProto;
 import ext.opensource.netty.common.TranDataProtoUtil;
+
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.util.Attribute;
 import lombok.Setter;
 
 /**
@@ -23,9 +22,6 @@ public class SimpleServerHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		super.channelActive(ctx);
-		Attribute<String> attr = ctx.channel().attr(NettyConstant.NETTY_CHANNEL_KEY);
-		String xx = attr.get();
-		NettyLog.info("Attr value: " + xx + " -xx: " + ctx.channel().id().asLongText());
 	}
 
 	@Override

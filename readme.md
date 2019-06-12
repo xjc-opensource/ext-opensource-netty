@@ -13,7 +13,7 @@ ext-opensource-netty
   ├── ext.opensource.redis  -- redis公用
   ├── netty-client          -- MQTT客户端 、WebSocket客户端等核心实现
   ├── netty-client-example  -- MQTT客户端 、Websocket客户端等扩展用例
-  ├── netyy-common          -- 公共类及其它
+  ├── netty-common          -- 公共类及其它
   ├── netty-server          -- MQTT服务器 、Websocket服务器等核心实现
   ├── netty-server-example  -- MQTT服务器 、Websocket服务器扩展用例
 ```
@@ -49,8 +49,7 @@ ext-opensource-netty
   * MQTT监控
   * MQTT管理
   * 订阅通配符支持
-  * MQTT WebSocket支持
-
+ 
 
 # 参考资料
   * Netty实战 (诺曼-毛瑞尔)
