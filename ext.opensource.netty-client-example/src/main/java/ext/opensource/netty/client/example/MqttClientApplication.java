@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ext.opensource.netty.client.example.listen.SpringBeanUtil;
 import ext.opensource.netty.client.example.mqtt.MqttClientCustomInit;
 import ext.opensource.netty.client.mqtt.MqttClient;
+import ext.opensource.netty.client.mqtt.api.MqttConsumerListener;
 import ext.opensource.netty.client.mqtt.common.ClientEvent;
 import ext.opensource.netty.common.NettyLog;
 import ext.opensource.netty.common.api.SocketApplication;
@@ -46,6 +47,19 @@ public class MqttClientApplication implements CommandLineRunner, SocketApplicati
 				nettyClient.consumer().subscribe("/a", 2);
 				///
 				nettyClient.producer().sendPubishMessage("/a", "demo", 2, false);
+			}
+		});
+		
+		nettyClient.consumer().setConsumerListener(new MqttConsumerListener(){
+			@Override
+			public void receiveMessage(int msgId, String topic, String msg) {
+				// TODO Auto-generated method stub	
+				System.err.println(String.format("msgid:%s, topic: %s, msg: %s", msgId, topic, msg));
+			}
+
+			@Override
+			public void receiveMessageByAny(int msgId, String topic, String msg) {
+				// TODO Auto-generated method stub
 			}
 		});
 
