@@ -77,7 +77,10 @@ public class ProtocolProcess implements InternalRecvice {
 	 */
 	public void processWillMessage(Channel channel) {
 		String clientId = NettyUtil.getClientId(channel);
-		this.processPublish(channel, sessionService.getWillMessage(clientId));
+		MqttPublishMessage willMsgObj = sessionService.getWillMessage(clientId);
+		if (willMsgObj != null) {
+			this.processPublish(channel, willMsgObj);
+		}
 	}
 
 	/**
