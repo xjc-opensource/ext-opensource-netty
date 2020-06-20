@@ -17,7 +17,7 @@
 	<properties>
 		<commons-configuration.version>1.10</commons-configuration.version>
 		<commons_logging_api.version>1.1</commons_logging_api.version>
-		<commons-beanutils.version>1.9.3</commons-beanutils.version>
+		<commons-beanutils.version>1.9.4</commons-beanutils.version>
 		<commons-collections.version>3.2.2</commons-collections.version>
 		<commons-io.version>2.5</commons-io.version>
 		<commons-lang3.version>3.4</commons-lang3.version>
