@@ -57,7 +57,7 @@ ext-opensource-netty
   * mqtt协议(英文): <http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/os/mqtt-v3.1.1-os.html>
   * mqtt协议(中文): <https://mcxiaoke.gitbooks.io/mqtt-cn/content/>
   * mqtt压测: <https://github.com/emqx/mqtt-jmeter>
-  * mqtt流程: <https://github.com/emqx/emqx-docs-cn/blob/master/source/mqtt.rst>
+  * mqtt流程: <https://github.com/emqx/emqx-docs-cn/blob/emq24/source/mqtt.rst>
   * mqtt官网: <http://mqtt.org/>
   * paho开源: <https://www.eclipse.org/paho>
   * iot-mqtt-server: <https://gitee.com/recallcode/iot-mqtt-server>  
